@@ -15,7 +15,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.5.9.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
@@ -40,6 +40,14 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/pl.allegro.tech.boot/handlebars-spring-boot-starter -->
+		<dependency>
+			<groupId>pl.allegro.tech.boot</groupId>
+			<artifactId>handlebars-spring-boot-starter</artifactId>
+			<version>0.2.15</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
