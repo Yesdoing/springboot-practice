@@ -17,10 +17,14 @@ public class User {
 	private String name;
 	private String email;
 	
-	
-	public Long getId() {
-		return id;
+	public boolean matchId(Long id) {
+		if(id == null) {
+			return false;
+		}
+		
+		return id.equals(this.id);
 	}
+	
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -30,9 +34,15 @@ public class User {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public String getPassword() {
-		return password;
+	
+	public boolean matchPassword(String password) {
+		if(password == null) {
+			return false;
+		}
+		
+		return password.equals(this.password);
 	}
+	
 	public void setPassword(String password) {
 		this.password = password;
 	}
