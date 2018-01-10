@@ -60,6 +60,18 @@ public class Question {
 	public String getContents() {
 		return contents;
 	}
+
+	public boolean matchUser(User sessionUser) {
+		if(sessionUser == null) {
+			return false;
+		}
+		return sessionUser.equals(writer);
+	}
+
+	public void update(String title, String contents) {
+		this.title = title;
+		this.contents = contents;
+	}
 	
 	
 	
