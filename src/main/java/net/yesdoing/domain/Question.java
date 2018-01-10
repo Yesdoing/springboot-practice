@@ -1,9 +1,15 @@
 package net.yesdoing.domain;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Question {
@@ -11,50 +17,48 @@ public class Question {
 	@GeneratedValue
 	private Long id;
 	
-	@Column(nullable=false)
-	private String writer;
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name="fk_question_writer"))
+	User writer;
 	@Column(nullable=false, length=100)
 	private String title;
 	@Column(nullable=false)
 	private String contents;
+	private LocalDateTime createDate;
+	
+	
+	public String getFormattedCreateDate() {
+		if (createDate == null) {
+			return ""; 
+		}
+		return createDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
+	}
 
 	public Question() {
 	}
 	
-	public Question(String writer, String title, String contents) {
+	public Question(User writer, String title, String contents) {
 		super();
 		this.writer = writer;
 		this.title = title;
 		this.contents = contents;
+		this.createDate = LocalDateTime.now();
 	}
-	
+
+	public User getWriter() {
+		return writer;
+	}
+
 	public Long getId() {
 		return id;
 	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public String getWriter() {
-		return writer;
-	}
-	public void setWriter(String writer) {
-		this.writer = writer;
-	}
+
 	public String getTitle() {
 		return title;
 	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
+
 	public String getContents() {
 		return contents;
-	}
-	public void setContents(String contents) {
-		this.contents = contents;
-	}
-	@Override
-	public String toString() {
-		return "Question [id=" + id + ", writer=" + writer + ", title=" + title + ", contents=" + contents + "]";
 	}
 	
 	

@@ -30,12 +30,12 @@ public class QuestionContoller {
 	}
 	
 	@PostMapping("")
-	public String create(Question question, HttpSession session) {
+	public String create(String title, String contents, HttpSession session) {
 		if(!HttpSessionUtils.isLoginUser(session)) {
 			return "/users/loginForm";
 		}
-		User user = HttpSessionUtils.getUserFromSession(session);
-		question.setWriter(user.getUserId());
+		User sessionUser = HttpSessionUtils.getUserFromSession(session);
+		Question question = new Question(sessionUser, title, contents);
 		questionRepository.save(question);
 		return "redirect:/";
 	}
