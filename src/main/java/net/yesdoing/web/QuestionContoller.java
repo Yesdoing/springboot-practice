@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import net.yesdoing.domain.Question;
 import net.yesdoing.domain.QuestionRepository;
+import net.yesdoing.domain.Result;
 import net.yesdoing.domain.User;
 
 @Controller
@@ -50,44 +51,51 @@ public class QuestionContoller {
 	
 	@GetMapping("/{id}/form")
 	public String updateForm(@PathVariable Long id, HttpSession session, Model model) {
-		if(!HttpSessionUtils.isLoginUser(session)) {
-			return "/users/loginForm";
-		}
-		User sessionUser = HttpSessionUtils.getUserFromSession(session);
 		Question question = questionRepository.findOne(id);
-		if(!question.matchUser(sessionUser)) {
-			return "redirect:/";
+		Result result = valid(session, question);
+		if(!result.isValid()) {
+			model.addAttribute("errorMessage", result.getErrorMessage());
+			return "/user/login_failed";
 		}
 		
 		model.addAttribute("question", question);
 		return "/qna/updateForm";
 	}
 	
-	@PutMapping("/{id}")
-	public String update(@PathVariable Long id, String title, String contents, HttpSession session) {
+	private Result valid(HttpSession session, Question question) {
 		if(!HttpSessionUtils.isLoginUser(session)) {
-			return "/users/loginForm";
+			return Result.fail("로그인이 필요합니다.");
 		}
 		User sessionUser = HttpSessionUtils.getUserFromSession(session);
-		Question question = questionRepository.findOne(id);
 		if(!question.matchUser(sessionUser)) {
-			return "redirect:/";
+			return Result.fail("자신이 쓴 글만 수정, 삭제가 가능합니다.");
 		}
+		return Result.ok();
+	}
+	
+	@PutMapping("/{id}")
+	public String update(@PathVariable Long id, String title, String contents, HttpSession session, Model model) {
+		Question question = questionRepository.findOne(id);
+		Result result = valid(session, question);
+		if(!result.isValid()) {
+			model.addAttribute("errorMessage", result.getErrorMessage());
+			return "/user/login_failed";
+		}
+		
 		question.update(title, contents);
 		questionRepository.save(question);
 		return String.format("redirect:/questions/%d", id);
 	}
 	
 	@DeleteMapping("/{id}")
-	public String delete(@PathVariable Long id, HttpSession session) {
-		if(!HttpSessionUtils.isLoginUser(session)) {
-			return "/users/loginForm";
-		}
-		User sessionUser = HttpSessionUtils.getUserFromSession(session);
+	public String delete(@PathVariable Long id, HttpSession session, Model model) {
 		Question question = questionRepository.findOne(id);
-		if(!question.matchUser(sessionUser)) {
-			return "redirect:/";
+		Result result = valid(session, question);
+		if(!result.isValid()) {
+			model.addAttribute("errorMessage", result.getErrorMessage());
+			return "/user/login_failed";
 		}
+		
 		questionRepository.delete(question);
 		return "redirect:/";
 	}
