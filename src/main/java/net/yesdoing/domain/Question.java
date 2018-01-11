@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Question {
 	@Id
@@ -32,7 +34,8 @@ public class Question {
 	private LocalDateTime createDate;
 	
 	@OneToMany(mappedBy="question")
-	@OrderBy("id ASC")
+	@OrderBy("id DESC")
+	@JsonBackReference
 	private List<Answer> answers;
 	
 	public List<Answer> getAnswers() {
