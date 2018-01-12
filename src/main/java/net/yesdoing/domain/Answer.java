@@ -75,6 +75,11 @@ public class Answer {
 	}
 
 	
+	public boolean isSameWriter(User loginUser) {
+		return loginUser.equals(this.writer);
+	}
+
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -105,6 +110,7 @@ public class Answer {
 		return "Answer [id=" + id + ", writer=" + writer + ", contents=" + contents + ", createDate=" + createDate
 				+ "]";
 	}
+
 	
 	
 }
